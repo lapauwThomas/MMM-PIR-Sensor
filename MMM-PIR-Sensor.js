@@ -26,7 +26,10 @@ Module.register('MMM-PIR-Sensor',{
 		presenceIndicatorColor: "red",
 		presenceOffIndicator: null,
 		presenceOffIndicatorColor: "dimgray",
-		runSimulator: false
+		runSimulator: false,
+		useSchedule: false,
+		scheduleOffTime: "22:30",
+		scheduleOnTime: "07:00"
 	},
 
 	userPresence: false,

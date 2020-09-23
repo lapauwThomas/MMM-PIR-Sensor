@@ -15,13 +15,34 @@ module.exports = NodeHelper.create({
     start: function () {
         this.started = false;
     },
+    checkSchedule:  function() {
+      //check if time is within allowable times
+        var tmp = this.config.scheduleOnTime.split(":");
+        var onMinutes = parseInt(tmp[0])*60+parseInt(tmp[1]);
+        tmp = this.config.scheduleOffTime.split(":");
+        var offMinutes = parseInt(tmp[0])*60+parseInt(tmp[1])
+        var now = new Date();
+        var time = now.getHours() * 60 + now.getMinutes();
 
+        if(offMinutes > onMinutes){ //normal case if time is larger
+            return time >= onMinutes && time < offMinutes;
+        }else{
+            return time >= onMinutes || time < offMinutes;
+        }
+
+    },
     activateMonitor: function () {
         // If always-off is enabled, keep monitor deactivated
         let alwaysOffTrigger = this.alwaysOff && (this.alwaysOff.readSync() === this.config.alwaysOffState)
         if (alwaysOffTrigger) {
             return;
         }
+        if(!this.checkSchedule()){
+          return;
+        }
+
+
+
         // If relays are being used in place of HDMI
         if (this.config.relayPin !== false) {
             this.relay.writeSync(this.config.relayState);
@@ -43,6 +64,8 @@ module.exports = NodeHelper.create({
 	    this.briefHDMIWakeupInterval = null;
         }
     },
+
+
 
     deactivateMonitor: function () {
         // If always-on is enabled, keep monitor activated
@@ -182,8 +205,19 @@ module.exports = NodeHelper.create({
 
             this.started = true;
 
+            if (self.config.useSchedule) {
+                if(!self.checkSchedule()){ //if outside of allowed schedule, disable on startup
+                  self.deactivateMonitor();
+                }
+                self.scheduleMonitorTimer = setInterval(function() { // Set the timeout before movement is identified
+                  if(!self.checkSchedule()){ //if outside of allowed schedule, disable
+                    self.deactivateMonitor();
+                  }
+                }, 30*1000); //check every 30 sec
+            }
+
 	    if (this.config.runSimulator) {
-	    	setInterval(function(){ 
+	    	setInterval(function(){
 			self.sendSocketNotification('USER_PRESENCE', true);
 			setTimeout(function() {
 				self.sendSocketNotification('USER_PRESENCE', false);
