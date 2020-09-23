@@ -179,6 +179,30 @@ The following properties can be configured:
 				<br><b>Note: </b> Don't forget to turn this one off when using the actual IR sensor!
 			</td>
 		</tr>
+		<tr>
+			<td><code>useSchedule</code></td>
+			<td>Turn on the schedule that prevents the mirror from turning on outside of scheduled active hours. Presence detection will not work outside of the active hours.
+				<br><b>Possible values:</b> <code>boolean</code>
+				<br><b>Default value:</b> <code>false</code>
+				<br><b>Note: </b> alwaysOff will still work, alwaysOn will only work during active hours.
+			</td>
+		</tr> 
+		<tr>
+			<td><code>scheduleOnTime</code></td>
+			<td>Start of the scheduled active hours as a 24h notation string (HH:MM). 
+				<br><b>Possible values:</b> <code>color value</code>
+				<br><b>Default value:</b> <code>23:30</code>
+				<br><b>Note: </b> <code>presenceOffIndicator</code> is not displayed if this parameter is set to <code>null</code>
+			</td>
+		</tr>   
+		 <tr>
+			<td><code>scheduleOffTime</code></td>
+			<td>End of the scheduled active hours as a 24h notation string (HH:MM). 
+				<br><b>Possible values:</b> <code>color value</code>
+				<br><b>Default value:</b> <code>23:30</code>
+				<br><b>Note: </b> <code>presenceOffIndicator</code> is not displayed if this parameter is set to <code>null</code>
+			</td>
+		</tr>   
 	</tbody>
 </table>
 
