@@ -33,14 +33,21 @@ module.exports = NodeHelper.create({
     },
     activateMonitor: function () {
         // If always-off is enabled, keep monitor deactivated
+        // If always-on is enabled, keep monitor activated
+        let alwaysOnTrigger = this.alwaysOn && (this.alwaysOn.readSync() === this.config.alwaysOnState)
         let alwaysOffTrigger = this.alwaysOff && (this.alwaysOff.readSync() === this.config.alwaysOffState)
+
         if (alwaysOffTrigger) {
             return;
         }
-        if(!this.checkSchedule()){
-          return;
-        }
 
+        if(!this.checkSchedule()){ //if not in schedule return and not activate
+          console.log("allow "+ this.config.alwaysOnOutsideSchedule)
+          console.log("on "+ alwaysOnTrigger)
+          if(!(this.config.alwaysOnOutsideSchedule && alwaysOnTrigger)){
+                      return;
+          }
+        }
 
 
         // If relays are being used in place of HDMI
@@ -71,6 +78,9 @@ module.exports = NodeHelper.create({
         // If always-on is enabled, keep monitor activated
         let alwaysOnTrigger = this.alwaysOn && (this.alwaysOn.readSync() === this.config.alwaysOnState)
         let alwaysOffTrigger = this.alwaysOff && (this.alwaysOff.readSync() === this.config.alwaysOffState)
+
+        alwaysOnTrigger = alwaysOffTrigger && (this.checkSchedule() || this.config.alwaysOnOutsideSchedule)
+
         if (alwaysOnTrigger && !alwaysOffTrigger) {
             return;
         }

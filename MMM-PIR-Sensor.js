@@ -29,7 +29,8 @@ Module.register('MMM-PIR-Sensor',{
 		runSimulator: false,
 		useSchedule: false,
 		scheduleOffTime: "22:30",
-		scheduleOnTime: "07:00"
+		scheduleOnTime: "07:00",
+		alwaysOnOutsideSchedule: false
 	},
 
 	userPresence: false,
